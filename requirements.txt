@@ -1,4 +1,4 @@
 pandas==2.1.4
 streamlit==1.29.0
 httpx==0.26.0
-
+requests-html==0.10.0
