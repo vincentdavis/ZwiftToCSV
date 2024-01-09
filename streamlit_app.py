@@ -1,4 +1,5 @@
 import streamlit as st
+from requests_html import HTMLSession as Session
 
 st.set_page_config(layout="wide")
 
@@ -12,3 +13,7 @@ You can also contact me on discord: [Vincent](discordapp.com/users/VincentDavis#
 This "dashboard" will look at the details of the FIT file 
 and the distribution on the data. You are able to compare two file side by side.
 """
+s = Session()
+response = s.get("https://google.com/")
+st.write("HTML output test")
+st.write(response.html)
