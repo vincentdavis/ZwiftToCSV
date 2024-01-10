@@ -25,9 +25,11 @@ event_url = None
 cat = None
 format = None
 if event_url is None:
-    event_url = st.text_input(label="Event URL", placeholder="url")
     cat = st.radio(label="Category", options=["ALL", "A", "B", "C", "D", "E"])
     format = st.radio(label="Format", options=["msec", "elapsed"])
+    event_url = st.text_input(
+        label="Event URL (may take a few seconds)", placeholder="https://zwiftpower.com/events.php?zid=4073983"
+    )
 if event_url and cat and format:
     cat = cat.replace("ALL", "")
     df = zps.get_primes_from_url(event_url, cat, format)

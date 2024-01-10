@@ -112,6 +112,7 @@ class ZPSession:
             raw = self.session.get(event_prime_results)
             print(f"Raw: {raw.text}")
             data = json.loads(raw.text)["data"]
+            data = format_prime_data(data)
             df = pd.DataFrame(data)
             return df
 
@@ -126,3 +127,19 @@ def flatten_row(row: dict) -> dict:
         except:
             print(k, v)
     return update_row
+
+
+def format_prime_data(data: list) -> dict:
+    """Format the prime data to be a list of dicts"""
+    primes = []
+    for row in data:
+        prime_details = {k.replace("name", "prime_name"): v for k, v in row.items() if "rider_" not in k}
+        print(prime_details)
+        for k, v in row.items():
+            if "rider_" in k:
+                new_row = {"place": k.split("_")[1]}
+                new_row.update(prime_details)
+                new_row.update(v)
+                primes.append(new_row)
+
+    return primes
