@@ -125,7 +125,7 @@ def flatten_row(row: dict) -> dict:
                 update_row[f"{k}"] = v[0]
                 update_row[f"{k}_1"] = v[1]
         except:
-            print(k, v)
+            logging.info(k, v)
     return update_row
 
 

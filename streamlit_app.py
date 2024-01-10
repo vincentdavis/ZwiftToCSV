@@ -1,8 +1,15 @@
 import streamlit as st
+from st_pages import Page, show_pages
 
 from zp_fetch import ZPSession
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Zwift to CSV")
+show_pages(
+    [
+        Page("streamlit_app.py", "Zwift to CSV", ""),
+        Page("pages/2_Team_Data.py", "Team Data", ""),  # Specify desired name and an optional icon
+    ]
+)
 
 """
 # Welcome to Vincent's zwift data utility
