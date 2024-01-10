@@ -5,13 +5,13 @@ from zp_fetch import ZPSession
 st.set_page_config(layout="wide")
 
 """
-# Welcome to Vincent's experiments with cycling data files
+# Welcome to Vincent's zwift data utility
 
 You can also contact me on discord: [Vincent](discordapp.com/users/vincent.davis)
 
 """
 
-st.write("Login to ZwiftPower")
+st.write("Login to ZwiftPower using your Zwift account. No data is stored.")
 username = None
 password = None
 if username is None:
