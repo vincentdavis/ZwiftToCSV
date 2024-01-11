@@ -59,7 +59,7 @@ if submit_button:
             st.dataframe(df)
         elif data_req == "History":
             logging.info("Get history data from")
-            data = zps.get_api(id=id, api="history")["history"]["data"]
+            data = zps.get_api(id=id, api="event_race_history")["event_race_history"]["data"]
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
@@ -70,7 +70,7 @@ if submit_button:
             st.dataframe(df)
         elif data_req == "Event ZP data":
             logging.info("Get event data from")
-            data = zps.get_api(id=id, api="event")["event"]["data"]
+            data = zps.get_api(id=id, api="event_results_view")["event_results_view"]["data"]
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
@@ -81,7 +81,7 @@ if submit_button:
             st.dataframe(df)
         elif data_req == "Event ZW data":
             logging.info("Get event data from")
-            data = zps.get_api(id=id, api="zwift_event")["zwift_event"]["data"]
+            data = zps.get_api(id=id, api="event_results_zwift")["event_results_zwift"]["data"]
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
@@ -92,7 +92,7 @@ if submit_button:
             st.dataframe(df)
         elif data_req == "Event Sprints":
             logging.info("Get event data from")
-            data = zps.get_api(id=id, api="sprints")["sprints"]["data"]
+            data = zps.get_api(id=id, api="event_sprints")["event_sprints"]["data"]
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
