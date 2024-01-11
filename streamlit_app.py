@@ -7,14 +7,15 @@ st.set_page_config(page_title="Zwift to CSV")
 show_pages(
     [
         Page("streamlit_app.py", "Zwift to CSV", ""),
-        Page("pages/2_Team_Data.py", "Team Data", ""),  # Specify desired name and an optional icon
+        Page("pages/2_Team_Data.py", "Team Data", ""),
+        Page("pages/3_Results.py", "Result Data", ""),
     ]
 )
 
 """
-# Welcome to Vincent's zwift data utility
+# Zwift to CSV utility
 
-You can also contact me on discord: [Vincent](discordapp.com/users/vincent.davis)
+If you have questions or feature request, DM me at [Vincent](discordapp.com/users/vincent.davis)
 
 """
 
