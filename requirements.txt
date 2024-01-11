@@ -1,5 +1,7 @@
 pandas==2.1.4
 streamlit==1.29.0
 st-pages
+pyppeteer
 selenium
-requests-html==0.10.0
+git+https://github.com/psf/requests-html
+# requests-html==0.10.0
