@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 import streamlit as st
 
-from zp_fetch import ZPSession
+from zp_fetch import ZPSession, flatten_row
 
 st.set_page_config(page_title="Zwift to CSV")
 
@@ -71,6 +71,8 @@ if submit_button:
         elif data_req == "Event ZP data":
             logging.info("Get event data from")
             data = zps.get_api(id=id, api="event_results_view")["event_results_view"]["data"]
+            for row in data:
+                row.update(flatten_row(row))
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
@@ -82,6 +84,8 @@ if submit_button:
         elif data_req == "Event ZW data":
             logging.info("Get event data from")
             data = zps.get_api(id=id, api="event_results_zwift")["event_results_zwift"]["data"]
+            for row in data:
+                row.update(flatten_row(row))
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",
@@ -93,6 +97,8 @@ if submit_button:
         elif data_req == "Event Sprints":
             logging.info("Get event data from")
             data = zps.get_api(id=id, api="event_sprints")["event_sprints"]["data"]
+            for row in data:
+                row.update(flatten_row(row))
             df = pd.DataFrame(data)
             st.download_button(
                 label="Download csv file",

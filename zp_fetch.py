@@ -81,7 +81,7 @@ class ZPSession:
                 event_results_view=f"{self.zp_url}/cache3/results/{id}_view.json",  # The results of an event
                 event_results_zwift=f"{self.zp_url}/cache3/results/{id}_zwift.json",  # The results of an event
                 event_race_history=f"{self.zp_url}/cache3/lists/0_race_history.json",  # This is the History tabe on the event page
-                event_sprints=f"{self.zp_url}https://zwiftpower.com/api3.php?do=event_sprints&zid={id}",
+                event_sprints=f"{self.zp_url}/api3.php?do=event_sprints&zid={id}",
             )
             data_set = dict()
             for k, v in self.apis.items():
