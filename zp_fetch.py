@@ -82,6 +82,9 @@ class ZPSession:
                 event_results_zwift=f"{self.zp_url}/cache3/results/{id}_zwift.json",  # The results of an event
                 event_race_history=f"{self.zp_url}/cache3/lists/0_race_history.json",  # This is the History tabe on the event page
                 event_sprints=f"{self.zp_url}/api3.php?do=event_sprints&zid={id}",
+                all_events=f"{self.zp_url}/cache3/lists/0_zwift_event_list_3.json",
+                rider_records=f"{self.zp_url}/cache3/global/rider_records_totalDistance.json",  # found on event list page
+                team_standing=f"{self.zp_url}/cache3/lists/1_team_standings_m_0.json",
             )
             data_set = dict()
             for k, v in self.apis.items():
@@ -108,10 +111,9 @@ class ZPSession:
         if self.get_session():
             self.session.get("https://zwiftpower.com/events.php")
             id = url.split("=")[1]
+            logging.info(f"Get primes data from: {url}")
             event_prime_results = f"{self.zp_url}/api3.php?do=event_primes&zid={id}&category={cat}&prime_type={format}"
-            print(event_prime_results)
             raw = self.session.get(event_prime_results)
-            print(f"Raw: {raw.text}")
             data = json.loads(raw.text)["data"]
             data = format_prime_data(data)
             df = pd.DataFrame(data)

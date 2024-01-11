@@ -14,6 +14,7 @@ If you have questions or feature request, DM me at [Vincent](discordapp.com/user
 
 The form below allows you to get the api data from a zwiftpower team page.
 You mist be the team admin to the list of pending riders.
+- Events: list of upcoming events
 - Results: Resylts tabe on the main events page.
 - History: History tab on the main event page. About 1 month of data
 - Event ZP data: This is the ZwiftPower event results date.
@@ -23,17 +24,17 @@ You mist be the team admin to the list of pending riders.
 - Event URL: only needed for event results
 """
 
-st.write("Login to ZwiftPower using your Zwift account. No data is stored.")
+st.write("Login to ZwiftPower using your Zwift account, account info is not stored.")
 
 with st.form(key="Team Data request"):
     username = st.text_input(label="UserName", placeholder="username")
     password = st.text_input(label="Password", placeholder="password")
     data_req = st.radio(
-        label="Choose the Team data",
-        options=["Results", "History", "Event ZP data", "Event ZW data", "Event Sprints", "Event Primes"],
+        label="Choose one",
+        options=["Events", "Results", "History", "Event ZP data", "Event ZW data", "Event Sprints", "Event Primes"],
     )
     url = st.text_input(label="Event URL", placeholder="https://zwiftpower.com/events.php?zid=12345")
-    st.write("These options are only for the Primes data")
+    st.write("These options are only apply to Primes data")
     cat = st.radio(label="Category", options=["ALL", "A", "B", "C", "D", "E"])
     format = st.radio(label="Format", options=["msec", "elapsed"])
     submit_button = st.form_submit_button(label="Submit")
@@ -46,7 +47,18 @@ if submit_button:
             st.error("Please enter a valid username and password")
         id = url.split("=")[-1]
         zps = ZPSession(login_data={"username": username, "password": password})
-        if data_req == "Results":
+        if data_req == "Events":
+            logging.info("Get events data from")
+            data = zps.get_api(id=id, api="all_events")["all_events"]["data"]
+            df = pd.DataFrame(data)
+            st.download_button(
+                label="Download csv file",
+                data=df.to_csv(index=False).encode("utf-8"),
+                file_name="Events.csv",
+                mime="text/csv",
+            )
+            st.dataframe(df)
+        elif data_req == "Results":
             logging.info("Get results data from")
             data = zps.get_api(id=id, api="all_results")["all_results"]["data"]
             df = pd.DataFrame(data)
@@ -77,7 +89,7 @@ if submit_button:
             st.download_button(
                 label="Download csv file",
                 data=df.to_csv(index=False).encode("utf-8"),
-                file_name="Event.csv",
+                file_name=f"Event_{id}.csv",
                 mime="text/csv",
             )
             st.dataframe(df)
@@ -90,7 +102,7 @@ if submit_button:
             st.download_button(
                 label="Download csv file",
                 data=df.to_csv(index=False).encode("utf-8"),
-                file_name="Event.csv",
+                file_name=f"Event_{id}.csv",
                 mime="text/csv",
             )
             st.dataframe(df)
@@ -103,7 +115,7 @@ if submit_button:
             st.download_button(
                 label="Download csv file",
                 data=df.to_csv(index=False).encode("utf-8"),
-                file_name="Sprints.csv",
+                file_name=f"Sprints_{id}.csv",
                 mime="text/csv",
             )
             st.dataframe(df)
@@ -113,7 +125,7 @@ if submit_button:
             st.download_button(
                 label="Download csv file",
                 data=df.to_csv(index=False).encode("utf-8"),
-                file_name=f"Event_prime_ID_{id}_CAT_{cat}_FORMAT_{format}.csv",
+                file_name=f"Event_prime_{id}_CAT_{cat}_FORMAT_{format}.csv",
                 mime="text/csv",
             )
             st.dataframe(df)
