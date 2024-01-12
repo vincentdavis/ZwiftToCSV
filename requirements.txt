@@ -1,5 +1,5 @@
 pandas==2.1.4
-streamlit==1.29.0
+streamlit==1.30.0
 st-pages
 pyppeteer
 selenium
