@@ -8,7 +8,8 @@ show_pages(
         Page("pages/2_Team_Data.py", "Team Data", ""),
         Page("pages/3_Results.py", "Events, Result Data", ""),
         Page("pages/4_Profiles.py", "Profiles", ""),
-        Page("pages/5_Misc.py", "Misc", ""),
+        Page("pages/5_Zwift.py", "Zwift", ""),
+        Page("pages/6_Misc.py", "Misc", ""),
     ]
 )
 
