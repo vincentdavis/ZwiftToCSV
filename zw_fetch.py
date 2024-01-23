@@ -30,12 +30,13 @@ power_profile: https://us-or-rly101.zwift.com/api/power-curve/power-profile
 API_OPTIONS = [
     "Me",
     "not implemented: Membership Status",
-    "not implemented: My Clubs",
+    "My Clubs",
     "not implemented: Goals",
+    "Activity Feeds (partial)",
     "not implemented: Activity Feed ALL",
     "not implemented: Activity Feed FAVORITES",
     "not implemented: Activity Feed JUST ME",
-    "not implemented: Power Profile",
+    "Power Profile",
     "not implemented: Download fit",
     "not implemented: Download fit as csv",
     "not implemented: Analyze activity fit"
@@ -174,6 +175,13 @@ class ZwiftAPIClient:
     def get_profile(self, zwid_or_public_id="me", **kwargs):
         return self.json_request(f"/api/profiles/{zwid_or_public_id}", **kwargs)
 
+    def get_power_profile(self):
+        """
+        power_profile: https://us-or-rly101.zwift.com/api/power-curve/power-profile
+        :return:
+        """
+        return self.json_request(f"/api/power-curve/power-profile")
+
     def get_profile_followees(self, zwid, params=None, **kwargs):
         if params:
             kwargs["params"] = params
@@ -191,11 +199,14 @@ class ZwiftAPIClient:
 
     def get_activities(self, zwid, params=None, **kwargs):
         """
+        activity feed ALL: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FOLLOWEES
+    activity feed favorites: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FAVORITES
+    activity feed just me: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=JUST_ME
         :param params: allowed request query parameters are:
             - start = pagination start index
             - limit = pagination page size
             - fetchRideons = true|false
-            - name = ALL|JUST ME
+            - name = ALL|JUST_ME|FAVORITES
             - component = ?
             - includeSelf = true|false
             - includeFollowees = true|false
@@ -245,6 +256,7 @@ class ZwiftAPIClient:
         return self.json_request(f"/api/private_event/{event_id}", **kwargs)
 
     def get_my_clubs(self, params=None, **kwargs):
+        """my_clubs: https://us-or-rly101.zwift.com/api/clubs/club/list/my-clubs?"""
         if params:
             kwargs["params"] = params
         return self.json_request("/api/clubs/club/list/my-clubs", **kwargs)

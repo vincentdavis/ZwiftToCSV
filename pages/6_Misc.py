@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 import streamlit as st
 
+from utils import check_login
 from zp_fetch import ZPSession
 
 st.set_page_config(page_title="Zwift to CSV")
@@ -25,8 +26,7 @@ with st.form(key="Team Data request"):
 
 if submit_button:
     with st.spinner("Processing..."):
-        if username is None or password is None:
-            st.error("Please enter a valid username and password")
+        check_login(username, password)
         zps = ZPSession(login_data={"username": username, "password": password})
         if data_req == "Rider Records":
             id = None

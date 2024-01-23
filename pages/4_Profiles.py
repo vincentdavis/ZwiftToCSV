@@ -3,7 +3,8 @@ import logging
 import pandas as pd
 import streamlit as st
 
-from zp_fetch import ZPSession, flatten_row
+from utils import check_login, flatten_row
+from zp_fetch import ZPSession
 
 st.set_page_config(page_title="Zwift to CSV")
 
@@ -26,10 +27,9 @@ with st.form(key="Team Data request"):
 
 if submit_button:
     with st.spinner("Processing..."):
-        if username is None or password is None:
-            st.error("Please enter a valid username and password")
+        check_login(username, password)
         if "https://zwiftpower.com/profile.php?z=" not in url:
-            st.error("Please enter a valid Profile URL")
+            st.exception("Please enter a valid Profile URL")
         id = url.split("=")[-1]
         zps = ZPSession(login_data={"username": username, "password": password})
         if data_req == "Main Profile":

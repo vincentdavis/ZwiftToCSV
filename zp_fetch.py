@@ -120,27 +120,6 @@ class ZPSession:
             return df
 
 
-def flatten_row(row: dict) -> dict:
-    update_row = {}
-    for k, v in row.items():
-        try:
-            if isinstance(v, list) and len(v) == 2:
-                update_row[f"{k}"] = v[0]
-                update_row[f"{k}_1"] = v[1]
-        except:
-            logging.info(k, v)
-    return update_row
-
-def flatten_dict(data):
-  flat_dict = {}
-  for k, v in data.items():
-    if isinstance(v, dict):
-      flat_dict.update(flatten_dict(v))  # Recursively flatten sub-dictionaries
-    else:
-      flat_dict[k] = v  # Add non-dictionary values directly
-  return flat_dict
-
-
 def format_prime_data(data: list) -> dict:
     """Format the prime data to be a list of dicts"""
     primes = []
