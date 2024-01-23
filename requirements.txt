@@ -1,9 +1,10 @@
 pandas==2.2.0
+plotly==5.18.0
 streamlit==1.30.0
 st-pages==0.4.5
 pyppeteer==1.0.2
-selenium==4.16.0
-python-dotenv==1.0.0
+selenium==4.17.2
+python-dotenv==1.0.1
 pur==7.3.1
 git+https://github.com/psf/requests-html
 # requests-html==0.10.0

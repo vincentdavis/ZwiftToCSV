@@ -19,7 +19,7 @@ You mist be the team admin to the list of pending riders.
 
 st.write("Login to ZwiftPower using your Zwift account. No data is stored.")
 
-with st.form(key="Team Data request"):
+with st.form(key="Zwift Data request"):
     username = st.text_input(label="UserName", placeholder="username")
     password = st.text_input(label="Password", placeholder="password")
     data_req = st.radio(
