@@ -3,7 +3,9 @@ import logging
 
 import pandas as pd
 import streamlit as st
-def check_login(username:str, password:str)->None:
+
+
+def check_login(username: str, password: str) -> None:
     """
     :param username: The username provided by the user for login.
     :param password: The password provided by the user for login.
@@ -14,7 +16,8 @@ def check_login(username:str, password:str)->None:
     except AssertionError:
         st.exception("Please enter a valid username and password")
 
-def download_data(df:pd.DataFrame, data= False):
+
+def download_data(df: pd.DataFrame = None, data=None, key: int = 1):
     """
     Download data as a CSV file.
 
@@ -24,20 +27,27 @@ def download_data(df:pd.DataFrame, data= False):
     """
     col1, col2 = st.columns(2)
     with col1:
-        st.download_button(
-                        label="Download csv file",
-                        data=df.to_csv(index=False).encode("utf-8"),
-                        file_name="Zwift_To_Csv_download.csv",
-                        mime="text/csv",
-                    )
+        if df is not None:
+            st.download_button(
+                label="Download csv file",
+                data=df.to_csv(index=False).encode("utf-8"),
+                file_name="Zwift_To_Csv_download.csv",
+                mime="text/csv",
+                key=f"{key}_csv",
+            )
+        else:
+            st.text("no csv available")
     with col2:
-        if data:
+        if data is not None:
             st.download_button(
                 label="Download JSON file",
                 data=json.dumps(data, indent=4),
                 file_name="Zwift_To_Csv_download.json",
                 mime="text/csv",
+                key=f"{key}_json",
             )
+        else:
+            st.text("no json available")
 
 
 def flatten_row(row: dict) -> dict:
@@ -62,7 +72,7 @@ def flatten_dict(data):
     flat_dict = {}
     for k, v in data.items():
         if isinstance(v, dict):
-          flat_dict.update(flatten_dict(v))  # Recursively flatten sub-dictionaries
+            flat_dict.update(flatten_dict(v))  # Recursively flatten sub-dictionaries
         else:
-          flat_dict[k] = v  # Add non-dictionary values directly
+            flat_dict[k] = v  # Add non-dictionary values directly
     return flat_dict

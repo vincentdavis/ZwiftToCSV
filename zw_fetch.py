@@ -1,17 +1,14 @@
-import getpass
 import json
 import logging
 
+import pandas as pd
 import requests
-from google.protobuf import json_format
+
+from utils import flatten_dict
 
 # Add a console logger
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler()
-    ]
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", handlers=[logging.StreamHandler()]
 )
 
 # from . import zwift_messages_pb2
@@ -39,7 +36,9 @@ API_OPTIONS = [
     "Power Profile",
     "not implemented: Download fit",
     "not implemented: Download fit as csv",
-    "not implemented: Analyze activity fit"
+    "not implemented: Analyze activity fit",
+    "Event",
+    "Event Results",
 ]
 
 
@@ -74,7 +73,13 @@ class ZwiftAPIClient:
     # username = None
     # password = None
 
-    def __init__(self, username:str, password:str, secure_server_url="https://secure.zwift.com", api_server_url="https://us-or-rly101.zwift.com"):
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        secure_server_url="https://secure.zwift.com",
+        api_server_url="https://us-or-rly101.zwift.com",
+    ):
         self.secure_server_url = secure_server_url
         self.api_server_url = api_server_url
         self.username = username
@@ -97,8 +102,13 @@ class ZwiftAPIClient:
         proto_object.ParseFromString(response.content)
         return proto_object
 
-    def authenticate(self)->json:
-        data = {"username": self.username, "password": self.password, "client_id": "Zwift_Mobile_Link", "grant_type": "password"}
+    def authenticate(self) -> json:
+        data = {
+            "username": self.username,
+            "password": self.password,
+            "client_id": "Zwift_Mobile_Link",
+            "grant_type": "password",
+        }
         self.session = requests.Session()
         abs_auth_url = "{0}/{1}".format(self.secure_server_url.rstrip("/"), self.auth_url.lstrip("/"))
         headers = self.make_headers(extra_headers={"Accept": "application/json"}, auth=False)
@@ -180,7 +190,7 @@ class ZwiftAPIClient:
         power_profile: https://us-or-rly101.zwift.com/api/power-curve/power-profile
         :return:
         """
-        return self.json_request(f"/api/power-curve/power-profile")
+        return self.json_request("/api/power-curve/power-profile")
 
     def get_profile_followees(self, zwid, params=None, **kwargs):
         if params:
@@ -199,20 +209,20 @@ class ZwiftAPIClient:
 
     def get_activities(self, zwid, params=None, **kwargs):
         """
-        activity feed ALL: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FOLLOWEES
-    activity feed favorites: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FAVORITES
-    activity feed just me: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=JUST_ME
-        :param params: allowed request query parameters are:
-            - start = pagination start index
-            - limit = pagination page size
-            - fetchRideons = true|false
-            - name = ALL|JUST_ME|FAVORITES
-            - component = ?
-            - includeSelf = true|false
-            - includeFollowees = true|false
-            - includeInProgress = true|false
-            - before = unix timestamp to query before this time
-            - after = unix timestamp to query after this time
+            activity feed ALL: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FOLLOWEES
+        activity feed favorites: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FAVORITES
+        activity feed just me: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=JUST_ME
+            :param params: allowed request query parameters are:
+                - start = pagination start index
+                - limit = pagination page size
+                - fetchRideons = true|false
+                - name = ALL|JUST_ME|FAVORITES
+                - component = ?
+                - includeSelf = true|false
+                - includeFollowees = true|false
+                - includeInProgress = true|false
+                - before = unix timestamp to query before this time
+                - after = unix timestamp to query after this time
         """
         if params:
             kwargs["params"] = params
@@ -255,6 +265,12 @@ class ZwiftAPIClient:
     def get_private_event(self, event_id, **kwargs):
         return self.json_request(f"/api/private_event/{event_id}", **kwargs)
 
+    def get_event_subgroup_results(self, id, params=None, **kwargs):
+        """id: subgroup id"""
+        if params:
+            kwargs["params"] = params
+        return self.json_request(f"/api/race-results/entries?event_subgroup_id={id}", **kwargs)
+
     def get_my_clubs(self, params=None, **kwargs):
         """my_clubs: https://us-or-rly101.zwift.com/api/clubs/club/list/my-clubs?"""
         if params:
@@ -263,10 +279,25 @@ class ZwiftAPIClient:
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
     import os
+
+    from dotenv import load_dotenv
+
     load_dotenv()
     world = 1
     c = ZwiftAPIClient(os.getenv("zw_user"), os.getenv("zw_pass"))
     c.authenticate()
-    print(c.get_profile())
+    event_ids = [4123413, 4123432]
+    for event in event_ids:
+        event_json = c.get_event(4123413)
+        with open(f"event_id_{event}.json", "w") as j:
+            json.dump(event_json, j, indent=4)
+        eventSubgroups_ids = [sg_id["id"] for sg_id in event_json["eventSubgroups"]]
+        print(f"Subgroup ids: {eventSubgroups_ids}")
+        print("###########")
+        for sg_id in eventSubgroups_ids:
+            results_json = c.get_event_subgroup_results(5137507)["entries"]
+            with open(f"event_{event}_subgroup_id_{sg_id}.json", "w") as j:
+                json.dump(results_json, j, indent=4)
+            results = [flatten_dict(row) for row in results_json]
+            pd.DataFrame(results).to_csv(f"event_{event}_subgroup_id_{sg_id}.csv")
