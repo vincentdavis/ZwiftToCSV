@@ -1,10 +1,7 @@
 import json
 import logging
 
-import pandas as pd
 import requests
-
-from utils import flatten_dict
 
 # Add a console logger
 logging.basicConfig(
@@ -287,17 +284,3 @@ if __name__ == "__main__":
     world = 1
     c = ZwiftAPIClient(os.getenv("zw_user"), os.getenv("zw_pass"))
     c.authenticate()
-    event_ids = [4123413, 4123432]
-    for event in event_ids:
-        event_json = c.get_event(4123413)
-        with open(f"event_id_{event}.json", "w") as j:
-            json.dump(event_json, j, indent=4)
-        eventSubgroups_ids = [sg_id["id"] for sg_id in event_json["eventSubgroups"]]
-        print(f"Subgroup ids: {eventSubgroups_ids}")
-        print("###########")
-        for sg_id in eventSubgroups_ids:
-            results_json = c.get_event_subgroup_results(5137507)["entries"]
-            with open(f"event_{event}_subgroup_id_{sg_id}.json", "w") as j:
-                json.dump(results_json, j, indent=4)
-            results = [flatten_dict(row) for row in results_json]
-            pd.DataFrame(results).to_csv(f"event_{event}_subgroup_id_{sg_id}.csv")
