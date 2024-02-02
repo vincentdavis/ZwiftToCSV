@@ -103,7 +103,7 @@ if main_submit:
             eventSubgroups_ids = [sg_id["id"] for sg_id in event_json["eventSubgroups"]]
             logging.info(f"get eventSubgroups_ids: {eventSubgroups_ids}")
             for sg_id in eventSubgroups_ids:
-                results_json = zps.get_event_subgroup_results(5137507)["entries"]
+                results_json = zps.get_event_subgroup_results(sg_id)["entries"]
                 results = [flatten_dict(row) for row in results_json]
                 df = pd.DataFrame(results)
                 st.text(f"event_{event_id}_subgroup_id_{sg_id}")
