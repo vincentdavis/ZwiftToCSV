@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 import streamlit as st
 
-from utils import check_login, flatten_row
+from utils import check_login, download_data, flatten_row
 from zp_fetch import ZPSession
 
 st.set_page_config(page_title="Zwift to CSV")
@@ -20,7 +20,7 @@ with st.form(key="Team Data request"):
     password = st.text_input(label="Password", placeholder="password")
     data_req = st.radio(
         label="Choose one",
-        options=["Main Profile", "Victims", "Signups"],
+        options=["Main Profile", "Victims", "Signups", "Power Profile"],
     )
     url = st.text_input(label="Profile URL", placeholder="https://zwiftpower.com/profile.php?z=123456")
     submit_button = st.form_submit_button(label="Submit")
@@ -67,3 +67,17 @@ if submit_button:
                 mime="text/csv",
             )
             st.dataframe(df)
+        elif data_req == "Power Profile":
+            logging.info("Getting Power Profile")
+            data_watts_30, data_wkg_30, data_watts_90, data_wkg_90 = zps.critical_power_profile(zwid=id)
+            for i, data in enumerate(
+                [
+                    ("Watts 30 days", data_watts_30),
+                    ("WKG, 30 days", data_wkg_30),
+                    ("Watts 90 days", data_watts_90),
+                    ("WKG 90 days", data_wkg_90),
+                ]
+            ):
+                df = pd.DataFrame(data[1])
+                st.write(data[0])
+                download_data(df, data, key=i)

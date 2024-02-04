@@ -101,6 +101,27 @@ class ZPSession:
                         data_set[k] = None
             return data_set
 
+    def critical_power_profile(self, zwid):
+        """Get the critical power profile for a rider"""
+        if self.get_session():
+            r = self.session.get("https://zwiftpower.com/events.php")
+            w = f"https://zwiftpower.com/api3.php?do=critical_power_profile&zwift_id={zwid}&zwift_event_id=&type=watts"
+            wkg = f"https://zwiftpower.com/api3.php?do=critical_power_profile&zwift_id={zwid}&zwift_event_id=&type=wkg"
+            logging.info(f"Get power data from: {w}")
+            logging.info(f"Get wkg data from: {wkg}")
+
+            data_watts = json.loads(self.session.get(w).text)["efforts"]
+            logging.info(f"Watt data: {data_watts}")
+
+            data_wkg = json.loads(self.session.get(wkg).text)["efforts"]
+            logging.info(f"WKG data: {data_wkg}")
+            logging.info("Got Data")
+            data_watts_30 = data_watts["30days"]
+            data_wkg_30 = data_watts["30days"]
+            data_watts_90 = data_watts["90days"]
+            data_wkg_90 = data_wkg["90days"]
+            return data_watts_30, data_wkg_30, data_watts_90, data_wkg_90
+
     def get_primes_from_url(self, url, cat, format):
         """Get primes for an event
         https://zwiftpower.com/events.php?zid=4073983
