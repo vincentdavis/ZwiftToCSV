@@ -10,6 +10,8 @@ show_pages(
         Page("pages/4_Profiles.py", "Profiles", ""),
         Page("pages/5_Zwift.py", "Zwift", ""),
         Page("pages/6_Misc.py", "Misc", ""),
+        Page("pages/7_ZWIRCUS.py", "ZWIRCUS"),
+        Page("pages/8_ZwiftRacing.py", "ZwiftRacing"),
     ]
 )
 

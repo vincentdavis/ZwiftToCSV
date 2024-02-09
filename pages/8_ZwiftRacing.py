@@ -7,6 +7,7 @@ from utils import download_data
 from zr import CATS, SORTBY, expand_elo_columns, get_elo
 
 st.set_page_config(page_title="Zwift Racing app")
+
 """
 # Zwift to CSV utility
 
