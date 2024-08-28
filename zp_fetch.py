@@ -1,8 +1,9 @@
 import json
 import logging
 
+import httpx
 import pandas as pd
-from requests_html import HTMLSession
+from bs4 import BeautifulSoup
 
 
 class ZPSession:
@@ -27,17 +28,21 @@ class ZPSession:
             return bool(status_code and not login_required)
 
     def login(self):
-        s = HTMLSession()
+        s = httpx.Client()
         self.login_data.update({"rememberMe": "on"})
         print(self.login_data)
         s.headers.update({"User-Agent": self.user_agent})
         s.get("https://zwiftpower.com/")
-        r2 = s.get("https://zwiftpower.com/ucp.php?mode=login&login=external&oauth_service=oauthzpsso")
-        post_url = r2.html.find("form", first=True).attrs["action"]
+        r2 = s.get(
+            "https://zwiftpower.com/ucp.php?mode=login&login=external&oauth_service=oauthzpsso", follow_redirects=True
+        )
+        soup = BeautifulSoup(r2.text, "html.parser")
+        post_url = soup.find("form")["action"]
         print(post_url)
 
         logging.info(f"Post URL: {post_url}")
-        r3 = s.post(post_url, data=self.login_data)
+        # r3 = s.post(post_url, data=self.login_data)
+        r3 = s.post(post_url, data=self.login_data, follow_redirects=True)
         logging.info(f"Post LOGIN URL: {r3.url}")
         print(f"Post LOGIN URL: {r3.url}")
         try:  # make sure we are logged in
