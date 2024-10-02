@@ -1,23 +1,16 @@
 import streamlit as st
-from st_pages import Page, show_pages
 
 st.set_page_config(page_title="Zwift to CSV")
-show_pages(
+pg = st.navigation(
     [
-        Page("streamlit_app.py", "Zwift to CSV", ""),
-        Page("pages/2_Team_Data.py", "Team Data", ""),
-        Page("pages/3_Results.py", "Events, Result Data", ""),
-        Page("pages/4_Profiles.py", "Profiles", ""),
-        Page("pages/5_Zwift.py", "Zwift", ""),
-        Page("pages/6_Misc.py", "Misc", ""),
-        Page("7_ZWIRCUS.py", "ZWIRCUS"),
-        Page("pages/8_ZwiftRacing.py", "ZwiftRacing"),
+        st.Page("app_pages/Zwift2CSV.py", title="Zwift to CSV"),
+        st.Page("app_pages/2_Team_Data.py", title="Team Data"),
+        st.Page("app_pages/3_Results.py", title="Events, Result Data"),
+        st.Page("app_pages/4_Profiles.py", title="Profiles"),
+        st.Page("app_pages/5_Zwift.py", title="Zwift"),
+        st.Page("app_pages/6_Misc.py", title="Misc"),
+        # st.Page("app_pages/7_ZWIRCUS.py", title="ZWIRCUS"),
+        st.Page("app_pages/8_ZwiftRacing.py", title="ZwiftRacing"),
     ]
 )
-
-"""
-### Zwift to CSV utility
-- If you have questions, problems or feature request, DM on discord at [vincent.davis](discordapp.com/users/vincent.davis)
-- See the menu on the left for options.
-- Also checkout [PyFitness activity analysis tools](https://vincentdavis-pyfitness.streamlit.app)
-"""
+pg.run()

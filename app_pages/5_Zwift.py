@@ -6,7 +6,7 @@ import streamlit as st
 from utils import check_login, download_data, flatten_dict
 from zw_fetch import API_OPTIONS, ZwiftAPIClient
 
-st.set_page_config(page_title="Zwift to CSV")
+# st.set_page_config(page_title="Zwift to CSV")
 """
 # Zwift to CSV utility
 

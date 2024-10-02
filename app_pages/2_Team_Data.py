@@ -6,7 +6,7 @@ import streamlit as st
 from utils import check_login, flatten_row
 from zp_fetch import ZPSession
 
-st.set_page_config(page_title="Zwift to CSV")
+# st.set_page_config(page_title="Zwift to CSV")
 """
 # Zwift to CSV utility
 

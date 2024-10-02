@@ -5,7 +5,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from PIL import Image
-from zp import racer_results
+
+from zp_fetch import racer_results
 
 c1, c2 = st.columns(2)
 with c1:

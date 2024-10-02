@@ -6,7 +6,7 @@ import streamlit as st
 from utils import download_data
 from zr import CATS, SORTBY, expand_elo_columns, get_elo
 
-st.set_page_config(page_title="Zwift Racing app")
+# st.set_page_config(page_title="Zwift Racing app")
 
 """
 # Zwift to CSV utility
@@ -33,7 +33,7 @@ with st.form(key="zr"):
     sortby = st.radio(label="Sort by", options=SORTBY)
     sortdirection = st.radio(label="Sort order", options=["Descending", "Ascending"])
     gender = st.radio(label="Gender", options=["Both", "M", "F"])
-    all_pages = st.checkbox(label="Get ALL rows (pages)", value=False)
+    all_pages = st.checkbox(label="Get ALL rows (app_pages)", value=False)
     submit = st.form_submit_button(label="Submit")
 
 logging.info(f"Main Form {submit}")

@@ -35,6 +35,7 @@ def get_elo(
     """
     # https://www.zwiftracing.app/api/riders?gender=M&page=0&pageSize=50&sortBy=points&sortDirection=asc&cat=Copper
     # https://www.zwiftracing.app/api/riders?page=0&pageSize=50&sortBy=points&sortDirection=desc&cat=Diamond
+
     if gender:
         url = f"https://www.zwiftracing.app/api/riders?gender={gender}page={page}&pageSize={pagesize}&sortBy={sortby}&sortDirection={sortdirection}&cat={cat}"
     else:

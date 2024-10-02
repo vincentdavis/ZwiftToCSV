@@ -1,0 +1,31 @@
+[[pages]]
+path = "streamlit_app.py"
+name = "Home"
+
+[[pages]]
+path = "pages/2_Team_Data.py"
+name = "Team Data"
+
+[[pages]]
+path = "pages/3_Results.py"
+name = "Results
+
+[[pages]]
+path = "pages/4_Profiles.py"
+name = "Profiles"
+
+[[pages]]
+path = "pages/5_Zwift.py"
+name = "Zwift"
+
+[[pages]]
+path = "pages/6_Misc.py"
+name = "Misc"
+
+[[pages]]
+path = "pages/7_ZWIRCUS.py"
+name = "ZWIRCUS"
+
+[[pages]]
+path = "pages/8_ZwiftRacing.py"
+name = "ZwiftRacing"
