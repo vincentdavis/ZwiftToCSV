@@ -1,13 +1,13 @@
 pandas==2.2.3
 httpx==0.27.2
 plotly==5.24.1
-streamlit==1.39.0
+streamlit==1.40.1
 st-pages==1.0.1
 # pyppeteer==2.0.0
 # selenium==4.24.0
 python-dotenv==1.0.1
-lxml_html_clean==0.2.2
+lxml_html_clean==0.4.1
 beautifulsoup4==4.12.3
-pur==7.3.2
+# pur==7.3.2
 # git+https://github.com/psf/requests-html
 # requests-html==0.10.0

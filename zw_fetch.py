@@ -1,7 +1,7 @@
 import json
 import logging
 
-import requests
+import httpx
 
 # Add a console logger
 logging.basicConfig(
@@ -41,7 +41,7 @@ API_OPTIONS = [
 
 def zwprofile(username, password):
     try:
-        get_token = requests.get(
+        get_token = httpx.get(
             f"https://z00pbp8lig.execute-api.us-west-1.amazonaws.com/latest/zwiftId?username={username}&pw={password}"
         )
         return get_token.json()
@@ -106,10 +106,11 @@ class ZwiftAPIClient:
             "client_id": "Zwift_Mobile_Link",
             "grant_type": "password",
         }
-        self.session = requests.Session()
+        self.session = httpx.Client()
         abs_auth_url = "{0}/{1}".format(self.secure_server_url.rstrip("/"), self.auth_url.lstrip("/"))
         headers = self.make_headers(extra_headers={"Accept": "application/json"}, auth=False)
         response = self.session.post(abs_auth_url, headers=headers, data=data)
+        # print(response)
         res = self.get_json(response)
         self.auth_info = res
         return self.auth_info
@@ -133,7 +134,7 @@ class ZwiftAPIClient:
 
     def download_file(self, url, raw_response=False, auth=False, **kwargs):
         headers = self.make_headers(auth=auth)
-        response = requests.get(url, headers=headers)
+        response = httpx.get(url, headers=headers)
         if not raw_response:
             if not response.ok:
                 raise ZwiftAPIResponseException(response.status_code, response.reason, response)
@@ -149,7 +150,7 @@ class ZwiftAPIClient:
         extra_headers.update(headers or {})
         headers = self.make_headers(extra_headers=extra_headers, auth=auth)
 
-        func = getattr(requests, method)
+        func = getattr(self.session, method)
         response = func(self.abs_url(endpoint), headers=headers, **kwargs)
         if not raw_response:
             response = self.get_json(response)
@@ -162,7 +163,7 @@ class ZwiftAPIClient:
         extra_headers.update(headers or {})
         headers = self.make_headers(extra_headers=extra_headers, auth=auth)
 
-        func = getattr(requests, method)
+        func = getattr(self.session, method)
         response = func(self.abs_url(endpoint), headers=headers, **kwargs)
         if not raw_response:
             response = self.get_proto(response, proto_class)
@@ -183,8 +184,7 @@ class ZwiftAPIClient:
         return self.json_request(f"/api/profiles/{zwid_or_public_id}", **kwargs)
 
     def get_power_profile(self):
-        """
-        power_profile: https://us-or-rly101.zwift.com/api/power-curve/power-profile
+        """power_profile: https://us-or-rly101.zwift.com/api/power-curve/power-profile
         :return:
         """
         return self.json_request("/api/power-curve/power-profile")
@@ -205,8 +205,7 @@ class ZwiftAPIClient:
         return self.json_request(f"/api/profiles/{zwid}/link", **kwargs)
 
     def get_activities(self, zwid, params=None, **kwargs):
-        """
-            activity feed ALL: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FOLLOWEES
+        """Activity feed ALL: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FOLLOWEES
         activity feed favorites: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=FAVORITES
         activity feed just me: https://us-or-rly101.zwift.com/api/activity-feed/feed/?limit=30&includeInProgress=false&feedType=JUST_ME
             :param params: allowed request query parameters are:

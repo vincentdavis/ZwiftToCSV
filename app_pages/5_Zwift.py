@@ -16,11 +16,11 @@ The form below allows you to get the api data from a zwiftpower team page.
 You mist be the team admin to the list of pending riders.
 """
 
-st.write("Login to ZwiftPower using your Zwift account. No data is stored.")
+st.write("Login to your Zwift account. No data is stored.")
 
 with st.form(key="Zwift Data request"):
     username = st.text_input(label="UserName", placeholder="username")
-    password = st.text_input(label="Password", placeholder="password")
+    password = st.text_input(label="Password", placeholder="password", type="password")
     data_req = st.radio(
         label="Choose data API to fetch",
         options=API_OPTIONS,
