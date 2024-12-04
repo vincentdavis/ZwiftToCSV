@@ -44,9 +44,9 @@ if main_submit:
                 logging.info(f"Getting {data_req}")
                 data = zps.get_profile()
                 data_flat = flatten_dict(data)
-                df = pd.DataFrame.from_dict(data_flat, orient="index", columns=["value"])
-                download_data(df, data)
-                st.dataframe(df)
+                # df = pd.DataFrame.from_dict(data_flat, orient="index", columns=["value"])
+                # download_data(df, data)
+                # st.dataframe(df)
             case "My Clubs":
                 logging.info("Getting My Clubs")
                 data = zps.get_my_clubs()

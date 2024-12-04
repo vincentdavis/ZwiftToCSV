@@ -472,15 +472,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pur"
-version = "7.3.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "click" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/bc/d9/8760c975cd24611151550381bdfea49cd799b59f32710c0747d3d9ac7373/pur-7.3.2.tar.gz", hash = "sha256:5f1643e3853b8c3b04850ddf60d52e1e121895399b69361efcf7c9b6ac1f5d9c", size = 1519533 }
-
-[[package]]
 name = "pyarrow"
 version = "17.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -794,7 +785,7 @@ dependencies = [
     { name = "lxml-html-clean" },
     { name = "pandas" },
     { name = "plotly" },
-    { name = "pur" },
+    { name = "pyarrow" },
     { name = "python-dotenv" },
     { name = "st-pages" },
     { name = "streamlit" },
@@ -807,7 +798,7 @@ requires-dist = [
     { name = "lxml-html-clean", specifier = "==0.4.1" },
     { name = "pandas", specifier = "==2.2.3" },
     { name = "plotly", specifier = "==5.24.1" },
-    { name = "pur", specifier = "==7.3.2" },
+    { name = "pyarrow", specifier = ">=17.0.0" },
     { name = "python-dotenv", specifier = "==1.0.1" },
     { name = "st-pages", specifier = "==1.0.1" },
     { name = "streamlit", specifier = "==1.40.1" },

@@ -13,7 +13,7 @@ from zp_fetch import ZPSession
 If you have questions or feature request, DM me at [Vincent](discordapp.com/users/vincent.davis)
 
 The form below allows you to get the api data from a zwiftpower team page.
-You mist be the team admin to the list of pending riders.
+You must be the team admin to the list of pending riders.
 """
 
 st.write("Login to ZwiftPower using your Zwift account. No data is stored.")

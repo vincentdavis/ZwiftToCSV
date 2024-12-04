@@ -16,7 +16,7 @@ If you have questions or feature request, DM me at [Vincent](discordapp.com/user
 The form below allows you to get the api data from a zwiftpower team page.
 You mist be the team admin to the list of pending riders.
 - Events: list of upcoming events
-- Results: Resylts tabe on the main events page.
+- Results: Results tabe on the main events page.
 - History: History tab on the main event page. About 1 month of data
 - Event ZP data: This is the ZwiftPower event results date.
 - Event ZW data: This is the Zwift event results data.

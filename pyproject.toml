@@ -13,4 +13,5 @@ dependencies = [
     "python-dotenv==1.0.1",
     "lxml_html_clean== 0.4.1",
     "beautifulsoup4==4.12.3",
+    "pyarrow>=17.0.0",
 ]
