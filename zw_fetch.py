@@ -86,9 +86,8 @@ class ZwiftAPIClient:
         return "{0}/{1}".format(self.api_server_url.rstrip("/"), endpoint.lstrip("/"))
 
     @staticmethod
-    def get_json(response):
-        if not response.ok:
-            raise ZwiftAPIResponseException(response.status_code, response.reason, response)
+    def get_json(response: httpx.Response):
+        response.raise_for_status()
         return response.json()
 
     @staticmethod

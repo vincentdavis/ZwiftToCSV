@@ -13,5 +13,4 @@ dependencies = [
     "python-dotenv==1.0.1",
     "lxml_html_clean== 0.4.1",
     "beautifulsoup4==4.12.3",
-    "pur==7.3.2",
 ]
