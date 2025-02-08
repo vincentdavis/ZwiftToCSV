@@ -5,13 +5,18 @@ description = " Zwift to CSV utility"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pandas==2.2.3",
-    "httpx==0.27.2",
-    "plotly==5.24.1",
-    "streamlit==1.40.1",
     "st-pages==1.0.1",
     "python-dotenv==1.0.1",
-    "lxml_html_clean== 0.4.1",
-    "beautifulsoup4==4.12.3",
-    "pyarrow>=17.0.0",
+    "pyarrow>=19.0.0",
+    "beautifulsoup4>=4.12.3",
+    "lxml-html-clean>=0.4.1",
+    "streamlit>=1.40.1",
+    "pandas>=2.2.3",
+    "httpx>=0.27.2",
+    "plotly>=5.24.1",
+]
+
+[dependency-groups]
+dev = [
+    "watchdog>=6.0.0",
 ]

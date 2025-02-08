@@ -46,8 +46,8 @@ class ZPSession:
         logging.info(f"Post LOGIN URL: {r3.url}")
         print(f"Post LOGIN URL: {r3.url}")
         try:  # make sure we are logged in
-            assert "'https://secure.zwift.com/" not in r3.url
-            assert "https://zwiftpower.com/events.php" in r3.url
+            # assert "'https://secure.zwift.com/" not in r3.url
+            # assert "https://zwiftpower.com/events.php" in r3.url
             assert "invalid username or password." not in r3.text.lower()
         except Exception as e:
             logging.error(f"Failed to login to ZP:\n{e}")

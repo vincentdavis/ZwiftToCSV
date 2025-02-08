@@ -82,7 +82,9 @@ if submit_button:
             st.dataframe(df)
         elif data_req == "Event ZP data":
             logging.info("Get event data from")
-            data = zps.get_api(id=id, api="event_results_view")["event_results_view"]["data"]
+            data = zps.get_api(id=id, api="event_results_view")
+            # print(data['event_results_view'])
+            data = data['event_results_view']["data"]
             for row in data:
                 row.update(flatten_row(row))
             df = pd.DataFrame(data)
