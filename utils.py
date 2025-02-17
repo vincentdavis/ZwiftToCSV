@@ -17,7 +17,7 @@ def check_login(username: str, password: str) -> None:
         st.exception("Please enter a valid username and password")
 
 
-def download_data(df: pd.DataFrame = None, data=None, key: int = 1):
+def download_data(df: pd.DataFrame = None, data = None, file_name:str="Zwift_To_Csv_download", key: int = 1):
     """
     Download data as a CSV file.
 
@@ -31,7 +31,7 @@ def download_data(df: pd.DataFrame = None, data=None, key: int = 1):
             st.download_button(
                 label="Download csv file",
                 data=df.to_csv(index=False).encode("utf-8"),
-                file_name="Zwift_To_Csv_download.csv",
+                file_name=f"{file_name}.csv",
                 mime="text/csv",
                 key=f"{key}_csv",
             )
@@ -42,7 +42,7 @@ def download_data(df: pd.DataFrame = None, data=None, key: int = 1):
             st.download_button(
                 label="Download JSON file",
                 data=json.dumps(data, indent=4),
-                file_name="Zwift_To_Csv_download.json",
+                file_name=f"{file_name}.json",
                 mime="text/csv",
                 key=f"{key}_json",
             )
@@ -76,3 +76,19 @@ def flatten_dict(data):
         else:
             flat_dict[k] = v  # Add non-dictionary values directly
     return flat_dict
+
+def activity_date_parse(data:dict, other:dict=None)->pd.DataFrame:
+    """Parse the small and large data url.
+    other is used to add the activity_id, activity_name, and activity_date to the data..
+    Anything that is constant down the rows."""
+
+    data["latitude"]=[coord[0] if coord else None for coord in data['latlng']]
+    data["longitude"]=[coord[1] if coord else None for coord in data['latlng']]
+    data.pop('latlng')
+    df = pd.DataFrame(data)
+    for k, v in other.items():
+        df[k] = v
+    return df
+
+
+

@@ -31,12 +31,23 @@ API_OPTIONS = [
     "not implemented: Activity Feed FAVORITES",
     "not implemented: Activity Feed JUST ME",
     "Power Profile",
-    "not implemented: Download fit",
-    "not implemented: Download fit as csv",
+    "Download FIT: reqs. zwid and activity_id",
+    "not implemented: Download CSV of FIT file: reqs. zwid and activity_id",
+    "Download graph Activity data (power, hr, cadence, temp, etc.) : reqs. zwid and activity_id",
+    "Download ALL event rider graph data",
     "not implemented: Analyze activity fit",
     "Event",
+    "Private Event",
     "Event Results",
 ]
+
+def parse_url_or_id(url_id:str)->str:
+    if url_id.startswith("https"):
+        return url_id.split("/")[-1]
+    else:
+        return url_id
+
+
 
 
 def zwprofile(username, password):
@@ -135,7 +146,7 @@ class ZwiftAPIClient:
         headers = self.make_headers(auth=auth)
         response = httpx.get(url, headers=headers)
         if not raw_response:
-            if not response.ok:
+            if not response.is_success:
                 raise ZwiftAPIResponseException(response.status_code, response.reason, response)
             response = response.content
         return response
@@ -226,13 +237,43 @@ class ZwiftAPIClient:
     def get_activity(self, zwid, activity_id, **kwargs):
         return self.json_request(f"/api/profiles/{zwid}/activities/{activity_id}", **kwargs)
 
-    def get_activity_file(self, zwid, activity, **kwargs):
+    def get_activity_fit(self, zwid, activity, **kwargs):
         if not isinstance(activity, dict):
             activity = self.get_activity(zwid, activity)
-        fit_file_bucket = activity["fitFileBucket"]
-        fit_file_key = activity["fitFileKey"]
+        logging.info(activity)
+
+        fit_file_bucket = activity.get("fitFileBucket", " s3-fit-prd-uswest2-zwift")
+        # f"'prod/{activity["profileId"]}/0d8721d3-1810419852658081792'"]
+        fit_file_key = activity.get("fitFileKey", None)
         fit_file_url = self.FIT_FILE_PATTERN.format(bucket_name=fit_file_bucket, file_key=fit_file_key)
         return self.download_file(fit_file_url, **kwargs)
+
+    def get_activity_data_url(self, zwid, activity, **kwargs):
+        """This is power, hr... data from a activity"""
+        if not isinstance(activity, dict):
+            activity = self.get_activity(zwid, activity)
+        logging.info(activity.keys())
+        try:
+            fullDataUrl = activity.get("fitnessData").get("fullDataUrl")
+            logging.info(f"Full Data URL: {fullDataUrl}")
+            full_data = self.json_request(fullDataUrl.split("com/")[1], **kwargs)
+            # logging.info(full_data)
+        except Exception as e:
+            logging.error(e)
+            full_data = None
+
+        try:
+            smallDataUrl = activity.get("fitnessData").get("smallDataUrl")
+            logging.info(f"Small Data URL: {smallDataUrl}")
+
+            small_data = self.json_request(smallDataUrl.split("com/")[1], **kwargs)
+            # logging.info(small_data)
+        except Exception as e:
+            logging.error(e)
+            small_data = None
+        return full_data, small_data, activity
+
+
 
     def get_activity_rideon(self, zwid, activity_id, **kwargs):
         return self.json_request(f"/api/profiles/{zwid}/activities/{activity_id}/rideon", **kwargs)
