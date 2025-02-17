@@ -5,9 +5,10 @@ import io
 
 import pandas as pd
 import streamlit as st
+from pyarrow import io_thread_count
 
-from utils import check_login, download_data, flatten_dict, activity_date_parse
-from zw_fetch import API_OPTIONS, ZwiftAPIClient, parse_url_or_id
+from utils import check_login, download_data, flatten_dict, activity_date_parse, parse_url_or_id
+from zw_fetch import API_OPTIONS, ZwiftAPIClient
 
 # st.set_page_config(page_title="Zwift to CSV")
 """
@@ -33,8 +34,8 @@ with st.form(key="Zwift Data request"):
     st.markdown(
         "- For event data or results, enter event id (12345) or event url https://www.zwift.com/events/view/12345"
     )
-    event_id = st.text_input(label="Event id or url ", placeholder="[12345] or https://www.zwift.com/events/view/12345")
-    activity_id = st.text_input(label="Activity id or url", placeholder="[12345] or https://www.zwift.com/activity/1234567899)")
+    event_id = st.text_input(label="Event id or url ", placeholder="12345 or https://www.zwift.com/events/view/12345")
+    activity_id = st.text_input(label="Activity id or url", placeholder="12345 or https://www.zwift.com/activity/1804087813377900576)")
     main_submit = st.form_submit_button(label="Submit")
 
 logging.info(f"Main Form {main_submit}")
@@ -71,8 +72,9 @@ if main_submit:
                 logging.info("Getting fit file")
                 if not zwid  and not activity_id:
                     st.error("zwid and activity_id are required to download fit file")
-                zwid = parse_url_or_id(zwid)
-                activity_id = parse_url_or_id(activity_id)
+                zwid = parse_url_or_id(zwid, id_type=zwid)['id']
+                activity_id = parse_url_or_id(activity_id, id_type="activity")['id']
+
                 fit_data = zps.get_activity_fit(zwid=zwid, activity=activity_id)
                 st.download_button(
                     label="Download FIT file",
@@ -86,8 +88,8 @@ if main_submit:
                 logging.info("Download graph Activity data")
                 if not zwid  and not activity_id:
                     st.error("zwid and activity_id are required to download fit file")
-                zwid = parse_url_or_id(zwid)
-                activity_id = parse_url_or_id(activity_id)
+                zwid = parse_url_or_id(zwid, id_type='zwid')['id']
+                activity_id = parse_url_or_id(activity_id)['id']
                 full_data, small_data, activity = zps.get_activity_data_url(zwid=zwid, activity=activity_id)
                 other_data = activity["profile"]
                 other_data.update({"startDate": activity["startDate"]})
@@ -104,13 +106,11 @@ if main_submit:
 
             case str() if "Download ALL event rider graph data" in data_req:
                 logging.info(f"Start Get Event rider data: {event_id}")
-                if "https://www.zwift.com/events/view/" in event_id:
-                    event_id = event_id.split("/")[-1]
                 try:
-                    event_id = int(event_id)
-                    assert 999999999 >= event_id > 0
+                    event_id = parse_url_or_id(event_id, id_type="event")['id']
                 except ValueError:
                     st.exception(f"event_id error, got {event_id}")
+
                 logging.info(f"get Event data {event_id}")
                 event_json = zps.get_event(event_id)
                 eventSubgroups_ids = [sg_id["id"] for sg_id in event_json["eventSubgroups"]]
@@ -121,6 +121,7 @@ if main_submit:
                         activity_id = entry["activityData"]["activityId"]
                         zwid = entry["profileId"]
                         try:
+                            logging.info(f"get rider data {zwid} {activity_id}")
                             full_data, small_data, activity = zps.get_activity_data_url(zwid=zwid, activity=activity_id)
                             other_data = activity["profile"]
                             other_data.update({"startDate": activity["startDate"]})

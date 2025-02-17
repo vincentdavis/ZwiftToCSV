@@ -27,27 +27,19 @@ API_OPTIONS = [
     "My Clubs",
     "not implemented: Goals",
     "Activity Feeds (partial)",
-    "not implemented: Activity Feed ALL",
-    "not implemented: Activity Feed FAVORITES",
-    "not implemented: Activity Feed JUST ME",
     "Power Profile",
     "Download FIT: reqs. zwid and activity_id",
-    "not implemented: Download CSV of FIT file: reqs. zwid and activity_id",
     "Download graph Activity data (power, hr, cadence, temp, etc.) : reqs. zwid and activity_id",
     "Download ALL event rider graph data",
-    "not implemented: Analyze activity fit",
     "Event",
     "Private Event",
     "Event Results",
+    "not implemented: Activity Feed ALL",
+    "not implemented: Activity Feed FAVORITES",
+    "not implemented: Activity Feed JUST ME",
+    "not implemented: Download CSV of FIT file: reqs. zwid and activity_id",
+    "not implemented: Analyze activity fit",
 ]
-
-def parse_url_or_id(url_id:str)->str:
-    if url_id.startswith("https"):
-        return url_id.split("/")[-1]
-    else:
-        return url_id
-
-
 
 
 def zwprofile(username, password):
@@ -120,8 +112,8 @@ class ZwiftAPIClient:
         abs_auth_url = "{0}/{1}".format(self.secure_server_url.rstrip("/"), self.auth_url.lstrip("/"))
         headers = self.make_headers(extra_headers={"Accept": "application/json"}, auth=False)
         response = self.session.post(abs_auth_url, headers=headers, data=data)
-        # print(response)
         res = self.get_json(response)
+        logging.info(f"Login response: {res}")
         self.auth_info = res
         return self.auth_info
 

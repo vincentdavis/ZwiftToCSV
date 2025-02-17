@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 
 import pandas as pd
 import streamlit as st
@@ -91,4 +92,39 @@ def activity_date_parse(data:dict, other:dict=None)->pd.DataFrame:
     return df
 
 
+def parse_url_or_id( url_id:str, id_type:str="other")->dict:
+    """Parse urls or ID supplied by user, zwid or event_id, activity_id, etc."""
+    # Events url
+    # www.zwift.com/events/view/
+    if url_id.isdigit():
+        return {"id_type": "other", "id": url_id}
 
+    parsed = {}
+    pattern = r'/(\d+)(?:/|#|$)'
+    # Find all matches
+    matches = re.findall(pattern, url_id)
+    logging.info(f"url id matches: {matches}")
+
+    if "https://www.zwift.com/events/view/" in url_id:
+        # https://www.zwift.com/events/view/4820327/6102470/1#results
+        logging.info("Event URL")
+        parsed['id_type'] = 'event'
+        parsed['id'] = matches[0]
+        if len(matches) > 1:
+            parsed['sub_id'] = matches[1]
+        return parsed
+
+    if "https://www.zwift.com/activity/" in url_id:
+        # https://www.zwift.com/activity/1804087813377900576
+        parsed['type'] = 'activity'
+        parsed['id'] = matches[0]
+        return parsed
+
+    # Other
+    if url_id.startswith("https"):
+        # For flexibility
+        parsed['id_type'] = "other"
+        parsed['id'] = matches[0]
+        if len(matches) > 1:
+            parsed['sub_id'] = matches[1:]
+        return parsed
